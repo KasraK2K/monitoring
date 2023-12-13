@@ -66,6 +66,7 @@ services:
   # ------------------------------- Alert Manager ------------------------------ #
   alertmanager:
     image: prom/alertmanager
+    container_name: alertmanager
     ports:
       - 9093:9093
     volumes:
@@ -82,20 +83,22 @@ services:
     #       - node.hostname == ${HOSTNAME}
 
   # --------------------------------- Cadvisor --------------------------------- #
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:rw
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-    ports:
-      - 8080:8080
-    networks:
-      - back-tier
-    restart: always
-    deploy:
-      mode: global
+  # cadvisor:
+  #   image: gcr.io/cadvisor/cadvisor
+  #   container_name: cadvisor
+  #   volumes:
+  #     - /:/rootfs:ro
+  #     - /var/run:/var/run:rw
+  #     - /sys:/sys:ro
+  #     - /var/lib/docker/:/var/lib/docker:ro
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - back-tier
+  #   restart: always
+  #   deploy:
+  #     mode: global
+  #   privileged: true
 
   # ---------------------------------- Grafana --------------------------------- #
   grafana:

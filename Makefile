@@ -4,8 +4,9 @@ PROJECT_NAME=Monitoring
 # ----------------------------- Private Commands ----------------------------- #
 --copy_config:
 	@echo "Copy Prometheus Configs"
-	cp configs/prometheus.yml volumes/prometheus
-	cp configs/alertmanager.yml volumes/alertmanager
+	mkdir volumes/prometheus volumes/alertmanager
+	cp configs/prometheus.yml volumes/prometheus/prometheus.yml
+	cp configs/alertmanager.yml volumes/alertmanager/alertmanager.yml
 
 # ------------------------------ Public Commands ----------------------------- #
 up: --copy_config
