@@ -2,10 +2,6 @@
 
 version: "3.8"
 
-volumes:
-  prometheus_data: {}
-  grafana_data: {}
-
 networks:
   front-tier:
   back-tier:
@@ -28,7 +24,7 @@ services:
     # links:
     #   - cadvisor:cadvisor
     #   - alertmanager:alertmanager
-    # - pushgateway:pushgateway
+    #   - pushgateway:pushgateway
     # depends_on:
     #   - cadvisor
     #   - pushgateway
