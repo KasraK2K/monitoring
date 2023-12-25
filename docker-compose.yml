@@ -1,16 +1,18 @@
+version: "3.8"
 # https://github.com/vegasbrianc/prometheus/blob/master/docker-compose.yml
 
-version: "3.8"
-
 networks:
-  front-tier:
-  back-tier:
+  monitoring:
+    driver: bridge
 
 services:
   # -------------------------------- Prometheus -------------------------------- #
+  # url in localhost: http://host.docker.internal:9090                           #
+  # ---------------------------------------------------------------------------- #
   prometheus:
     image: prom/prometheus
     container_name: prometheus
+    restart: unless-stopped
     volumes:
       - ./volumes/prometheus/:/etc/prometheus/
       - ./volumes/prometheus/data:/prometheus
@@ -21,16 +23,15 @@ services:
       - "--web.console.templates=/usr/share/prometheus/consoles"
     ports:
       - "9090:9090"
-    # links:
-    #   - cadvisor:cadvisor
-    #   - alertmanager:alertmanager
+    links:
+      # - cadvisor:cadvisor
+      - alertmanager:alertmanager
     #   - pushgateway:pushgateway
     # depends_on:
     #   - cadvisor
     #   - pushgateway
     networks:
-      - back-tier
-    restart: always
+      - monitoring
     # deploy:
     #   placement:
     #     constraints:
@@ -38,12 +39,13 @@ services:
 
   # ------------------------------- Node Exporter ------------------------------ #
   node-exporter:
-    image: quay.io/prometheus/node-exporter:latest
+    image: prom/node-exporter:latest
     container_name: node-exporter
+    restart: unless-stopped
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
-      # - /:/rootfs:ro
+      - /:/rootfs:ro
       # - /:/host:ro,rslave
     command:
       - "--path.rootfs=/host"
@@ -54,8 +56,7 @@ services:
     ports:
       - 9100:9100
     networks:
-      - back-tier
-    restart: always
+      - monitoring
     deploy:
       mode: global
 
@@ -63,13 +64,13 @@ services:
   alertmanager:
     image: prom/alertmanager
     container_name: alertmanager
+    restart: unless-stopped
     ports:
       - 9093:9093
     volumes:
       - ./volumes/alertmanager/:/etc/alertmanager/
     networks:
-      - back-tier
-    restart: always
+      - monitoring
     command:
       - "--config.file=/etc/alertmanager/alertmanager.yml"
       - "--storage.path=/alertmanager"
@@ -82,6 +83,7 @@ services:
   # cadvisor:
   #   image: gcr.io/cadvisor/cadvisor
   #   container_name: cadvisor
+  #   restart: unless-stopped
   #   volumes:
   #     - /:/rootfs:ro
   #     - /var/run:/var/run:rw
@@ -90,11 +92,9 @@ services:
   #   ports:
   #     - 8080:8080
   #   networks:
-  #     - back-tier
-  #   restart: always
+  #     - monitoring
   #   deploy:
   #     mode: global
-  #   privileged: true
 
   # ---------------------------------- Grafana --------------------------------- #
   grafana:
@@ -111,8 +111,7 @@ services:
     # env_file:
     #   - ./grafana/config.monitoring
     networks:
-      - back-tier
-      - front-tier
+      - monitoring
     restart: always
     environment:
       # increases the log level from info to debug
