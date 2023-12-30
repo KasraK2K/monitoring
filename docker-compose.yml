@@ -24,11 +24,11 @@ services:
     ports:
       - "9090:9090"
     links:
-      # - cadvisor:cadvisor
+      - cadvisor:cadvisor
       - alertmanager:alertmanager
     #   - pushgateway:pushgateway
-    # depends_on:
-    #   - cadvisor
+    depends_on:
+      - cadvisor
     #   - pushgateway
     networks:
       - monitoring
@@ -80,27 +80,27 @@ services:
     #       - node.hostname == ${HOSTNAME}
 
   # --------------------------------- Cadvisor --------------------------------- #
-  # cadvisor:
-  #   image: gcr.io/cadvisor/cadvisor
-  #   container_name: cadvisor
-  #   restart: unless-stopped
-  #   volumes:
-  #     - /:/rootfs:ro
-  #     - /var/run:/var/run:rw
-  #     - /sys:/sys:ro
-  #     - /var/lib/docker/:/var/lib/docker:ro
-  #   ports:
-  #     - 8080:8080
-  #   networks:
-  #     - monitoring
-  #   deploy:
-  #     mode: global
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    container_name: cadvisor
+    restart: unless-stopped
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:rw
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+    ports:
+      - 8080:8080
+    networks:
+      - monitoring
+    deploy:
+      mode: global
 
   # ---------------------------------- Grafana --------------------------------- #
   grafana:
     image: grafana/grafana-enterprise
     container_name: grafana
-    # user: "472"
+    user: "root"
     depends_on:
       - prometheus
     ports:
