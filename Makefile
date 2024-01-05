@@ -7,6 +7,7 @@ PROJECT_NAME=Monitoring
 	mkdir -p volumes/prometheus volumes/alertmanager
 	cp configs/prometheus.yml volumes/prometheus/prometheus.yml
 	cp configs/alertmanager.yml volumes/alertmanager/alertmanager.yml
+	cp configs/grafana.ini volumes/grafana/grafana.ini
 
 # ------------------------------ Public Commands ----------------------------- #
 up: --copy_config
