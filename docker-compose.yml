@@ -33,6 +33,12 @@ services:
     #   - pushgateway
     networks:
       - monitoring
+
+    # environment:
+    #   - DOCKER0_IP=${DOCKER0_IP}
+    # extra_hosts:
+    #   - "host.docker.internal:${DOCKER0_IP}"
+
     # deploy:
     #   placement:
     #     constraints:

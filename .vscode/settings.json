@@ -1,4 +1,10 @@
 {
   "nuxt.isNuxtApp": false,
-  "cSpell.words": ["alertmanager", "alertmanagers", "cadvisor"]
+  "cSpell.words": [
+    "alertmanager",
+    "alertmanagers",
+    "cadvisor",
+    "inet",
+    "techsuite"
+  ]
 }

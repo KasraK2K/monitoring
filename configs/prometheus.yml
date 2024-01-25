@@ -2,7 +2,7 @@
 global:
   scrape_interval: 15s # By default, scrape targets every 15 seconds.
   evaluation_interval: 15s # By default, scrape targets every 15 seconds.
-  # scrape_timeout is set to the global default (10s).
+  # scrape_timeout: 10s # scrape_timeout is set to the global default (10s).
 
   # Attach these labels to any time series or alerts when communicating with
   # external systems (federation, remote storage, Alertmanager).
@@ -27,11 +27,10 @@ alerting:
 # A scrape configuration containing exactly one endpoint to scrape:
 # Here it's Prometheus itself.
 scrape_configs:
-  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  # The job name is added as a label `job=<job_name>` to any time series scraped from this config.
 
   # -------------------------------- Prometheus -------------------------------- #
   - job_name: "prometheus"
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 15s
     static_configs:
       - targets: ["localhost:9090"]
@@ -40,7 +39,6 @@ scrape_configs:
 
   # --------------------------------- Cadvisor --------------------------------- #
   - job_name: "cadvisor"
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 15s
     static_configs:
       - targets: ["cadvisor:8080"]
@@ -49,9 +47,19 @@ scrape_configs:
 
   # ----------------------------------- Node ----------------------------------- #
   - job_name: "node-exporter"
-    # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 15s
     static_configs:
       - targets: ["node-exporter:9100"]
         labels:
           group: "node-exporter"
+
+  # ---------------------------------- Backend --------------------------------- #
+  - job_name: "backend"
+    scrape_interval: 15s
+    static_configs:
+      - targets:
+          - "metrics-gateway-dev.techsuite.ai"
+          - "metrics-main-dev.techsuite.ai"
+          - "metrics-business-dev.techsuite.ai"
+        labels:
+          group: "backend"
